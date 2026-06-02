@@ -128,23 +128,62 @@ export class EditCalloutPane extends UIPane {
 		renderInfo(this.plugin.app, this.callout, containerEl);
 		containerEl.appendChild(miscEditorContainerEl);
 		containerEl.appendChild(appearanceEditorContainerEl);
+		this.renderDeleteSection(containerEl);
+	}
+
+	/**
+	 * Returns true if this callout was created in the plugin (and can therefore
+	 * be deleted), as opposed to coming from Obsidian, a theme, or a snippet.
+	 */
+	protected isCustomCallout(): boolean {
+		const { callout } = this;
+		return callout.sources.length === 1 && callout.sources[0].type === 'custom';
+	}
+
+	/**
+	 * Renders a section with a button to delete the callout.
+	 * This is only shown for custom callouts that the user created.
+	 *
+	 * @param containerEl The container to render into.
+	 */
+	protected renderDeleteSection(containerEl: HTMLElement): void {
+		if (this.viewOnly || !this.isCustomCallout()) {
+			return;
+		}
+
+		const { callout } = this;
+		const sectionEl = containerEl.createDiv({
+			cls: ['calloutmanager-edit-callout-section', 'calloutmanager-edit-callout-delete'],
+		});
+
+		sectionEl.createEl('h2', { text: 'Delete' });
+		sectionEl.createEl('p', {
+			cls: 'calloutmanager-edit-callout-info',
+			text: 'Permanently remove this custom callout and its appearance settings.',
+		});
+
+		let confirming = false;
+		new ButtonComponent(sectionEl)
+			.setButtonText('Delete Callout')
+			.then((btn) => {
+				btn.buttonEl.classList.add('mod-warning', 'calloutmanager-edit-callout-delete-button');
+				btn.onClick(() => {
+					if (!confirming) {
+						confirming = true;
+						btn.setButtonText('Click again to confirm');
+						return;
+					}
+
+					this.plugin.removeCustomCallout(callout.id);
+					this.nav.close();
+				});
+			});
 	}
 
 	/** @override */
 	public displayControls(): void {
-		const { callout, controlsEl } = this;
-
-		// Delete button.
-		if (!this.viewOnly && callout.sources.length === 1 && callout.sources[0].type === 'custom') {
-			new ButtonComponent(controlsEl)
-				.setIcon('lucide-trash')
-				.setTooltip('Delete Callout')
-				.onClick(() => {
-					this.plugin.removeCustomCallout(callout.id);
-					this.nav.close();
-				})
-				.then(({ buttonEl }) => buttonEl.classList.add('clickable-icon', 'mod-warning'));
-		}
+		// The delete action is rendered as a clearly-labeled button in the pane
+		// body (see renderDeleteSection) rather than as a top-right icon.
 	}
 
 	/**
@@ -238,5 +277,11 @@ declare const STYLES: `
 	// The reset button.
 	.calloutmanager-edit-callout-appearance-reset {
 		width: 100%;
+	}
+
+	// The delete callout button.
+	.calloutmanager-edit-callout-delete-button {
+		margin-top: var(--size-4-2);
+		cursor: pointer;
 	}
 `;

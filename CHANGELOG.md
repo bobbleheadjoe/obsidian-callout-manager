@@ -1,3 +1,11 @@
+# Version 1.1.5
+
+> [!new] Delete Custom Callouts  
+> Custom callouts you created now have a clearly-labeled "Delete Callout" button (with a confirm step) at the bottom of their edit screen.
+
+> [!fix] Tighter Edit Screen  
+> The callout preview no longer reserves a large fixed height, so editing a callout no longer leaves a big empty gap.
+
 # Version 1.1.4
 
 > [!fix] Callout List Buttons Clickable Again  

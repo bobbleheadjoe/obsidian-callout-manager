@@ -152,14 +152,10 @@ export class EditCalloutPanePreview {
 }
 
 declare const STYLES: `
-	// Ensure the preview takes a certain height.
+	// Let the preview hug its content so short callouts don't leave a large
+	// empty gap before the callout info.
 	.calloutmanager-edit-callout-preview {
-		padding-bottom: var(--size-4-8);
-		min-height: 14em;
-
-		body.is-mobile & {
-			min-height: 35vh;
-		}
+		padding-bottom: var(--size-4-6);
 	}
 
 	// The text box that allows the preview to be changed.
