@@ -1,3 +1,13 @@
+# Version 1.1.3
+
+> [!fix] Tidier Callout List Buttons  
+> The edit and insert buttons in the "Manage Callouts" list are now borderless icon buttons instead of heavy filled boxes.
+
+# Version 1.1.2
+
+> [!fix] Modern Obsidian Color Compatibility  
+> Callout colors are now written as 6-digit hex codes instead of `r, g, b` triplets, so picking a color works again on current Obsidian versions. Colors saved with older versions are upgraded automatically.
+
 # Version 1.1.1
 
 > [!new] Export Callouts as CSS  

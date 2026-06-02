@@ -206,12 +206,12 @@ function createPreviewFactory(viewOnly: boolean): (callout: Callout) => HTMLElem
 		// Add the edit button to the container.
 		calloutContainerEl.classList.add('calloutmanager-preview-container-with-button');
 
-		const editButton = calloutContainerEl.createEl('button');
+		const editButton = calloutContainerEl.createEl('button', { cls: 'clickable-icon' });
 		editButton.setAttribute('data-callout-manager-action', 'edit');
 		editButton.appendChild(editButtonContent.cloneNode(true));
 
 		// Add the insert button to the container.
-		const insertButton = calloutContainerEl.createEl('button');
+		const insertButton = calloutContainerEl.createEl('button', { cls: 'clickable-icon' });
 		insertButton.setAttribute('data-callout-manager-action', 'insert');
 		insertButton.appendChild(insertButtonContent.cloneNode(true));
 
@@ -303,15 +303,15 @@ declare const STYLES: `
 		gap: var(--size-4-2);
 
 		// Ensure the button has a small width, but can grow tall.
-		> button {
+		// The buttons use the 'clickable-icon' class for a borderless look;
+		// center the icon with flex and keep the padding tight.
+		> button.clickable-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			width: var(--calloutmanager-callout-edit-buttons-size);
 			height: 100%;
-
-			// Fix rendering not working on non-phone devices.
-			body:not(.is-phone) & {
-				display: block;
-				padding: 0 !important;
-			}
+			padding: 0 !important;
 		}
 	}
 `;
