@@ -1,5 +1,5 @@
 import Callout from '&callout';
-import { RGB, parseColorRGB } from '&color';
+import { RGB, parseColorAny } from '&color';
 
 /**
  * Gets the color (as a {@link RGB}) from a {@link Callout}.
@@ -9,7 +9,10 @@ import { RGB, parseColorRGB } from '&color';
  * @returns The callout's color, or null if not valid.
  */
 export function getColorFromCallout(callout: Callout): RGB | null {
-	return parseColorRGB(`rgb(${callout.color})`);
+	// `callout.color` is the resolved `--callout-color` value from Obsidian,
+	// which may be a hex color (modern Obsidian) or an `r, g, b` triplet (older
+	// Obsidian and CSS snippets), so parse it leniently.
+	return parseColorAny(callout.color);
 }
 
 /**

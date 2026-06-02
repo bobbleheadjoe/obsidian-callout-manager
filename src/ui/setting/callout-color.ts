@@ -2,7 +2,7 @@ import { ColorComponent, DropdownComponent, ExtraButtonComponent, Setting } from
 
 import { Callout } from '&callout';
 import { getColorFromCallout } from '&callout-util';
-import { RGB, parseColorRGB } from '&color';
+import { RGB, parseColorAny, toCssHex } from '&color';
 
 import { ResetButtonComponent } from '&ui/component/reset-button';
 
@@ -30,8 +30,9 @@ export class CalloutColorSetting extends Setting {
 		this.addColorPicker((picker) => {
 			this.colorComponent = picker;
 			picker.onChange(() => {
-				const { r, g, b } = this.getColor();
-				this.onChanged?.(`${r}, ${g}, ${b}`);
+				// Store the picked color as a 6-digit hex code so it is written to
+				// `--callout-color` in the format modern Obsidian expects.
+				this.onChanged?.(toCssHex(this.getColor()));
 			});
 		});
 
@@ -57,9 +58,10 @@ export class CalloutColorSetting extends Setting {
 
 	/**
 	 * Sets the color string.
-	 * This only accepts comma-delimited RGB values.
+	 * This accepts hex colors (e.g. `#ff0a19`) as well as comma-delimited RGB
+	 * values (e.g. `255, 10, 25`).
 	 *
-	 * @param color The color (e.g. `255, 10, 25`) or undefined to reset the color to default.
+	 * @param color The color or undefined to reset the color to default.
 	 * @returns `this`, for chaining.
 	 */
 	public setColorString(color: string | undefined): typeof this {
@@ -67,7 +69,7 @@ export class CalloutColorSetting extends Setting {
 			return this.setColor(undefined);
 		}
 
-		return this.setColor(parseColorRGB(`rgb(${color})`) ?? { r: 0, g: 0, b: 0 });
+		return this.setColor(parseColorAny(color) ?? { r: 0, g: 0, b: 0 });
 	}
 
 	/**

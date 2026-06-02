@@ -1,7 +1,7 @@
 import { Component, getIcon } from 'obsidian';
 
 import { CalloutID } from '&callout';
-import { RGB } from '&color';
+import { RGB, toCssHex } from '&color';
 
 const NO_ATTACH = Symbol();
 
@@ -126,7 +126,9 @@ export class CalloutPreviewComponent extends Component {
 			return this;
 		}
 
-		calloutEl.style.setProperty('--callout-color', `${color.r}, ${color.g}, ${color.b}`);
+		// Write a hex color so the preview matches how modern Obsidian renders the
+		// `--callout-color` custom property.
+		calloutEl.style.setProperty('--callout-color', toCssHex(color));
 		return this;
 	}
 

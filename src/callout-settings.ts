@@ -3,6 +3,7 @@ import { getCurrentColorScheme, getCurrentThemeID } from 'obsidian-extra';
 import { ThemeID } from 'obsidian-undocumented';
 
 import { CalloutID } from '&callout';
+import { parseColorAny, toCssHex } from '&color';
 
 /**
  * Gets the current environment that callouts are under.
@@ -57,7 +58,13 @@ export function calloutSettingsToStyles(
 
 		// Build the styles.
 		const { changes } = setting;
-		if (changes.color != null) styles.push(`--callout-color: ${changes.color}`);
+		if (changes.color != null) {
+			// Modern Obsidian requires `--callout-color` to be a hex color. Normalize
+			// whatever was stored (hex, `rgb()`, or a legacy `r, g, b` triplet) into a
+			// 6-digit hex code so saved settings keep working on new Obsidian versions.
+			const parsedColor = parseColorAny(changes.color);
+			styles.push(`--callout-color: ${parsedColor != null ? toCssHex(parsedColor) : changes.color}`);
+		}
 		if (changes.icon != null) styles.push(`--callout-icon: ${changes.icon}`);
 		if (changes.customStyles != null) styles.push(changes.customStyles);
 	}

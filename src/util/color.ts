@@ -106,6 +106,48 @@ export function toHexRGB(color: RGB | RGBA): string {
 	return parts.map((c) => c.toString(16).padStart(2, '0')).join('');
 }
 
+/**
+ * Converts an RGB color to a 6-digit CSS hex string (e.g. `#ff0000`).
+ *
+ * Modern Obsidian expects the `--callout-color` custom property to be a hex
+ * color rather than a comma-separated `r, g, b` triplet, so this is the format
+ * the plugin writes when applying a callout's color. The alpha channel (if any)
+ * is ignored.
+ *
+ * @param color The color to convert.
+ * @returns A 6-digit hex color string, prefixed with `#`.
+ */
+export function toCssHex(color: RGB | RGBA): string {
+	const clamp = (c: number) => Math.max(0, Math.min(255, Math.round(c)));
+	return (
+		'#' +
+		[color.r, color.g, color.b]
+			.map((c) => clamp(c).toString(16).padStart(2, '0'))
+			.join('')
+	);
+}
+
+/**
+ * Parses a color string in any of the formats the plugin might encounter into
+ * RGB(A) components.
+ *
+ * This accepts `#hex` colors, `rgb()`/`rgba()` functions, and bare
+ * comma/space-separated `r, g, b` triplets (the legacy format Obsidian used for
+ * `--callout-color`).
+ *
+ * @param color The color string.
+ * @returns The color RGB(A), or null if not valid.
+ */
+export function parseColorAny(color: string): RGB | RGBA | null {
+	const trimmed = color.trim();
+	if (trimmed === '') return null;
+	if (trimmed.startsWith('#')) return parseColorHex(trimmed);
+	if (/^rgba?\(/i.test(trimmed)) return parseColorRGBA(trimmed);
+
+	// Bare triplet such as "82, 139, 212".
+	return parseColorRGB(`rgb(${trimmed})`);
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Color Parsing:
 // ---------------------------------------------------------------------------------------------------------------------

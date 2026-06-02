@@ -76,7 +76,13 @@ function appendColorInfo(el: HTMLElement, callout: Callout): void {
 	el.createEl(
 		'code',
 		{ cls: 'calloutmanager-edit-callout--callout-color', text: describeColor(calloutColor) },
-		(colorEl) => colorEl.style.setProperty('--resolved-callout-color', callout.color),
+		// The swatch CSS wraps this in `rgb(...)`, so always provide an `r, g, b`
+		// triplet even when `callout.color` is a hex color.
+		(colorEl) =>
+			colorEl.style.setProperty(
+				'--resolved-callout-color',
+				`${calloutColor.r}, ${calloutColor.g}, ${calloutColor.b}`,
+			),
 	);
 }
 
