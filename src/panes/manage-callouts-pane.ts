@@ -1,6 +1,6 @@
 import { ButtonComponent, MarkdownView, TextComponent, getIcon } from 'obsidian';
 
-import { Callout } from '&callout';
+import { Callout, CalloutID } from '&callout';
 import { getColorFromCallout, getTitleFromCallout } from '&callout-util';
 import CalloutManagerPlugin from '&plugin';
 
@@ -66,35 +66,14 @@ export class ManageCalloutsPane extends UIPane {
 		const { plugin, viewOnly } = this;
 
 		this.searchFn = calloutSearch(plugin.callouts.values(), {
-			preview: createPreviewFactory(viewOnly),
+			preview: createPreviewFactory(viewOnly, this.onCalloutAction.bind(this)),
 		});
 
 		// Refresh the callout list.
 		this.doSearch(this.searchQuery);
 	}
 
-	protected onCalloutButtonClick(evt: MouseEvent) {
-		let id = null;
-		let action = null;
-		for (let target = evt.targetNode; target != null && (id == null || action == null); target = target?.parentElement) {
-			if (!(target instanceof Element)) continue;
-
-			// Find the callout ID.
-			if (id == null) {
-				id = target.getAttribute('data-callout-manager-callout');
-			}
-
-			// Find the button action.
-			if (action == null) {
-				action = target.getAttribute('data-callout-manager-action');
-			}
-		}
-
-		// Do nothing if neither the callout nor action was found.
-		if (id == null || action == null) {
-			return;
-		}
-
+	protected onCalloutAction(id: CalloutID, action: 'edit' | 'insert') {
 		// View/edit the selected callout.
 		if (action === 'edit') {
 			this.nav.open(new EditCalloutPane(this.plugin, id, this.viewOnly));
@@ -121,7 +100,6 @@ export class ManageCalloutsPane extends UIPane {
 	public display(): void {
 		// Create a content element to render into.
 		const contentEl = document.createDocumentFragment().createDiv();
-		contentEl.addEventListener('click', this.onCalloutButtonClick.bind(this));
 
 		// Render the previews.
 		const { callouts } = this;
@@ -178,7 +156,10 @@ export class ManageCalloutsPane extends UIPane {
 	}
 }
 
-function createPreviewFactory(viewOnly: boolean): (callout: Callout) => HTMLElement {
+function createPreviewFactory(
+	viewOnly: boolean,
+	onAction: (id: CalloutID, action: 'edit' | 'insert') => void,
+): (callout: Callout) => HTMLElement {
 	const editButtonContent =
 		(viewOnly ? getIcon('lucide-view') : getIcon('lucide-edit')) ?? document.createTextNode('Edit Callout');
 
@@ -209,11 +190,13 @@ function createPreviewFactory(viewOnly: boolean): (callout: Callout) => HTMLElem
 		const editButton = calloutContainerEl.createEl('button', { cls: 'clickable-icon' });
 		editButton.setAttribute('data-callout-manager-action', 'edit');
 		editButton.appendChild(editButtonContent.cloneNode(true));
+		editButton.addEventListener('click', () => onAction(callout.id, 'edit'));
 
 		// Add the insert button to the container.
 		const insertButton = calloutContainerEl.createEl('button', { cls: 'clickable-icon' });
 		insertButton.setAttribute('data-callout-manager-action', 'insert');
 		insertButton.appendChild(insertButtonContent.cloneNode(true));
+		insertButton.addEventListener('click', () => onAction(callout.id, 'insert'));
 
 		// Return the preview container.
 		return calloutContainerEl;

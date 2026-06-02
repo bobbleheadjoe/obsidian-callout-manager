@@ -1,3 +1,8 @@
+# Version 1.1.4
+
+> [!fix] Callout List Buttons Clickable Again  
+> The edit and insert buttons in the "Manage Callouts" list now respond to clicks on the icon itself, not just the surrounding area.
+
 # Version 1.1.3
 
 > [!fix] Tidier Callout List Buttons  
