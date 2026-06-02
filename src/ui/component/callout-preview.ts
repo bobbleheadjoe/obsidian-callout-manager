@@ -441,4 +441,23 @@ body {
 	background-color: transparent !important;
 	contain: none;
 }
+
+/* Keep the preview hugging its callout. Themes often re-apply padding or a
+   min-height to the reading/editing view containers (with enough specificity
+   to beat the resets above), which leaves a large empty area below a short
+   callout. The 'body.obsidian-app' prefix raises specificity so these win. */
+body.obsidian-app .markdown-reading-view,
+body.obsidian-app .markdown-preview-view,
+body.obsidian-app .markdown-preview-section,
+body.obsidian-app .markdown-source-view,
+body.obsidian-app .cm-scroller,
+body.obsidian-app .cm-sizer,
+body.obsidian-app .cm-contentContainer,
+body.obsidian-app .cm-content {
+	min-height: 0 !important;
+	height: auto !important;
+	max-height: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
 `;

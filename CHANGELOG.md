@@ -1,3 +1,11 @@
+# Version 1.1.6
+
+> [!fix] Less Empty Space When Editing  
+> The callout preview no longer leaves a large empty area below short callouts, even with themes that pad the reading view.
+
+> [!fix] Aligned Section Headings  
+> Section headings on the edit screen now line up with the text beneath them instead of being indented by some themes.
+
 # Version 1.1.5
 
 > [!new] Delete Custom Callouts  

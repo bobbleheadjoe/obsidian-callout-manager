@@ -240,6 +240,14 @@ declare const STYLES: `
 
 	.calloutmanager-edit-callout-section h2 {
 		margin-bottom: 0.3em;
+
+		// Some themes indent headings with padding/border/text-indent. Neutralize
+		// that so the section heading lines up with the section's body text.
+		margin-left: 0 !important;
+		padding-left: 0 !important;
+		border-left: none !important;
+		text-indent: 0 !important;
+
 		& + p {
 			margin-top: 0;
 		}
