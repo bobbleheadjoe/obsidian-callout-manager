@@ -442,22 +442,35 @@ body {
 	contain: none;
 }
 
-/* Keep the preview hugging its callout. Themes often re-apply padding or a
-   min-height to the reading/editing view containers (with enough specificity
-   to beat the resets above), which leaves a large empty area below a short
-   callout. The 'body.obsidian-app' prefix raises specificity so these win. */
-body.obsidian-app .markdown-reading-view,
-body.obsidian-app .markdown-preview-view,
-body.obsidian-app .markdown-preview-section,
-body.obsidian-app .markdown-source-view,
-body.obsidian-app .cm-scroller,
-body.obsidian-app .cm-sizer,
-body.obsidian-app .cm-contentContainer,
-body.obsidian-app .cm-content {
+/* Keep the preview hugging its callout. Themes often re-apply padding, a
+   min-height, or a stretching height to the workspace/view containers (with
+   enough specificity to beat the 'all: initial' resets above), which leaves a
+   large empty area below a short callout. The doubled '.obsidian-app.obsidian-app'
+   prefix raises specificity (0,3,1) so these reliably win, and we cover the
+   whole container chain so it doesn't matter which layer the theme inflates. */
+body.obsidian-app.obsidian-app .app-container,
+body.obsidian-app.obsidian-app .horizontal-main-container,
+body.obsidian-app.obsidian-app .workspace,
+body.obsidian-app.obsidian-app .workspace-split,
+body.obsidian-app.obsidian-app .workspace-tabs,
+body.obsidian-app.obsidian-app .workspace-tab-container,
+body.obsidian-app.obsidian-app .workspace-leaf,
+body.obsidian-app.obsidian-app .workspace-leaf-content,
+body.obsidian-app.obsidian-app .view-content,
+body.obsidian-app.obsidian-app .markdown-reading-view,
+body.obsidian-app.obsidian-app .markdown-preview-view,
+body.obsidian-app.obsidian-app .markdown-preview-section,
+body.obsidian-app.obsidian-app .markdown-source-view,
+body.obsidian-app.obsidian-app .cm-editor,
+body.obsidian-app.obsidian-app .cm-scroller,
+body.obsidian-app.obsidian-app .cm-sizer,
+body.obsidian-app.obsidian-app .cm-contentContainer,
+body.obsidian-app.obsidian-app .cm-content {
 	min-height: 0 !important;
 	height: auto !important;
 	max-height: none !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	flex: 0 0 auto !important;
 }
 `;
