@@ -436,10 +436,22 @@ const SHADOW_DOM_RESET_STYLES = `
 	line-height: var(--line-height-normal) !important;
 }
 
-/* Use transparent background color. */
+/* Use transparent background color. Also collapse the body's own box metrics:
+   core Obsidian gives the body a min-height (so the editor fills the window),
+   which here leaves a large empty area below a short callout. We can't reset
+   'all' on the body without wiping the inherited CSS color/font variables the
+   callout needs, so only the box metrics are reset. */
 body {
 	background-color: transparent !important;
 	contain: none;
+}
+
+body.obsidian-app.obsidian-app {
+	min-height: 0 !important;
+	height: auto !important;
+	max-height: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
 }
 
 /* Keep the preview hugging its callout. Themes often re-apply padding, a

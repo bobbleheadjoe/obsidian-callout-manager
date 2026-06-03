@@ -1,3 +1,8 @@
+# Version 1.1.8
+
+> [!fix] Empty Space When Editing (for real this time)  
+> The callout preview's shadow-DOM body inherited a min-height from Obsidian, leaving a tall empty area below short callouts. Its box metrics are now reset so the preview hugs the callout.
+
 # Version 1.1.7
 
 > [!fix] Less Empty Space When Editing  
